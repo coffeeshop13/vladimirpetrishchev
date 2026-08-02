@@ -98,6 +98,11 @@ function documentShell(title, description, body) {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHtml(title)}</title><meta name="description" content="${escapeHtml(description)}"><link rel="shortcut icon" href="/favicon.svg"><style>${styles}</style></head><body>${body}</body></html>`;
 }
 
+function articleAssetUrl(assetPath) {
+  if (/^https?:\/\//i.test(String(assetPath))) return String(assetPath);
+  return `../../${String(assetPath).replace(/^\/+/, "")}`;
+}
+
 const postFiles = (await readdir(postsDirectory, { withFileTypes: true }).catch(() => []))
   .filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
   .map((entry) => entry.name);
@@ -125,7 +130,7 @@ await writeFile(resolve(outputDirectory, "blog/index.html"), documentShell("Blog
 for (const { metadata, html } of posts) {
   const postDirectory = resolve(outputDirectory, "blog", metadata.slug);
   await mkdir(postDirectory, { recursive: true });
-  const heroImage = metadata.image ? `<img class="article-hero-image" src="${escapeHtml(metadata.image)}" alt="${escapeHtml(metadata.image_alt || metadata.title)}">` : "";
+  const heroImage = metadata.image ? `<img class="article-hero-image" src="${escapeHtml(articleAssetUrl(metadata.image))}" alt="${escapeHtml(metadata.image_alt || metadata.title)}">` : "";
   const visual = metadata.visual === "decision-framework" ? `<aside class="decision-visual" aria-label="AI product decision framework"><div class="visual-kicker">Before you build</div><div class="visual-steps"><div class="visual-step"><span>01 / WORK</span><strong>What changes?</strong><p>Find the decision or workflow that should become meaningfully better.</p></div><div class="visual-arrow" aria-hidden="true">→</div><div class="visual-step"><span>02 / RISK</span><strong>What can fail?</strong><p>Make uncertainty, unacceptable errors, and human review explicit.</p></div><div class="visual-arrow" aria-hidden="true">→</div><div class="visual-step"><span>03 / OUTCOME</span><strong>How do we know?</strong><p>Choose the measurable result that earns the system a place in the work.</p></div></div></aside>` : "";
   const body = `<header class="site-header"><a class="wordmark" href="/" aria-label="Vladimir Petrishchev home">VP<span>·</span></a><nav class="header-links" aria-label="Blog navigation"><a href="/blog/index.html">All notes</a><a href="/rss.xml">RSS</a></nav></header><main class="article-shell"><a class="back-link" href="/blog/index.html">← All notes</a><article><header class="article-header"><div class="eyebrow">${(metadata.tags || []).map(escapeHtml).join(" · ")}</div><div><h1>${escapeHtml(metadata.title)}</h1><div class="post-meta"><time datetime="${escapeHtml(metadata.date)}">${escapeHtml(metadata.date)}</time></div><p>${escapeHtml(metadata.description || "")}</p>${heroImage}</div></header><div class="article-body">${visual}${html}</div></article></main>${footer}`;
   await writeFile(resolve(postDirectory, "index.html"), documentShell(`${metadata.title} — Vladimir Petrishchev`, metadata.description || metadata.title, body));
