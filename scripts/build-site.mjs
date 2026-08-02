@@ -124,6 +124,7 @@ posts.sort((left, right) => String(right.metadata.date).localeCompare(String(lef
 const homepagePath = resolve(outputDirectory, "index.html");
 let homepage = await readFile(homepagePath, "utf8");
 homepage = homepage.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<link rel="modulepreload"[^>]*>/gi, "");
+homepage = homepage.replace("</head>", "<style>.proof span { font-size: 14px; }</style></head>");
 homepage = homepage.replace('<a href="#experience">Experience</a>', '<a href="/blog/index.html">Blog</a><a href="#experience">Experience</a>');
 await writeFile(homepagePath, homepage);
 
