@@ -1,9 +1,6 @@
 name: Generate weekly blog post
 
 on:
-  schedule:
-    - cron: "0 8 * * 1"
-      timezone: "Europe/Berlin"
   workflow_dispatch:
     inputs:
       topic:
