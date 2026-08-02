@@ -92,6 +92,34 @@ const styles = `
 .back-link { color:#5c636c; display:inline-block; margin-bottom:52px; font:12px DM Mono,monospace; text-transform:uppercase; letter-spacing:.06em; } .back-link:hover { color:var(--blue); }
 footer { background:var(--ink); color:var(--paper); padding:60px max(34px,50vw - 626px); } footer .section-label { color:#a7b1bd; } .email { letter-spacing:-.07em; margin:43px 0 90px; font-family:Fraunces,serif; font-size:clamp(39px,6vw,82px); font-weight:500; line-height:.96; display:inline-block; } .email span { color:#8eafff; } .footer-bottom { color:#a7b1bd; border-top:1px solid #3f4854; justify-content:space-between; padding-top:16px; font-family:DM Mono,monospace; font-size:11px; display:flex; } .footer-links { gap:22px; display:flex; } .footer-bottom a { color:#fff; }
 @media (width<=720px) { .site-header { height:67px; padding:0 20px; } .header-links { gap:14px; font-size:12px; } .blog-shell,.article-shell { padding:57px 20px 80px; } .blog-hero,.article-header { grid-template-columns:1fr; gap:28px; padding-bottom:65px; } .blog-hero h1,.article-header h1 { margin:0; font-size:58px; } .blog-hero p,.article-header p { margin:0; font-size:17px; } .post-grid { margin-top:75px; } .post-card { grid-template-columns:1fr; gap:11px; min-height:0; padding:24px 0; } .post-card p { margin:0; } .post-card-media img { height:auto; min-height:0; aspect-ratio:16 / 9; transform:scale(1.08); } .article-body { margin-left:0; padding-top:52px; font-size:17px; } .article-body h2 { font-size:34px; } .article-hero-image { margin-top:36px; } .visual-steps { grid-template-columns:1fr; } .visual-step { border-right:0!important; border-bottom:1px solid var(--line); padding:18px 0 22px; } .visual-step:last-child { border-bottom:0; } .visual-arrow { transform:rotate(90deg); padding:8px 0; } .email { margin:35px 0 65px; } .footer-bottom { gap:15px; line-height:1.5; } }
+
+/* Bloomberg-inspired newsroom type: a browser-safe substitute for its proprietary web font. */
+:root { --news-sans:"Avenir Next","Helvetica Neue",Helvetica,Arial,sans-serif; }
+body { font-family:var(--news-sans); font-size:15px; line-height:1.4; }
+.site-header { height:68px; }
+.wordmark { font-family:var(--news-sans); font-size:20px; font-weight:700; letter-spacing:-.06em; }
+.header-links { font-size:14px; font-weight:600; }
+.header-links a:not(.header-contact) { border-bottom:0; padding-bottom:0; }
+.header-links a:hover { color:var(--blue); }
+.eyebrow,.tags,.post-card time,.post-meta,.back-link,.visual-kicker,.visual-step span,.footer-bottom { font-family:var(--news-sans); font-size:12px; font-weight:600; letter-spacing:.02em; }
+.blog-shell,.article-shell { max-width:1200px; padding-top:52px; }
+.blog-hero { grid-template-columns:20% 1fr; gap:28px; padding-bottom:62px; }
+.blog-hero h1,.article-header h1 { font-family:var(--news-sans); font-size:clamp(44px,5.3vw,76px); font-weight:700; letter-spacing:-.055em; line-height:.98; }
+.blog-hero h1 em { color:var(--ink); font-style:normal; }
+.blog-hero p,.article-header p { font-size:18px; font-weight:400; line-height:1.45; }
+.post-grid { margin-top:62px; }
+.post-card { grid-template-columns:12% 1.15fr 1fr .95fr; gap:18px; min-height:156px; padding:20px 0; }
+.post-card h2 { font-family:var(--news-sans); font-size:26px; font-weight:700; letter-spacing:-.035em; line-height:1.08; }
+.post-card p { font-size:15px; line-height:1.4; }
+.post-card-media img { min-height:116px; transform:scale(1.13); }
+.article-header { grid-template-columns:20% 1fr; gap:28px; padding-bottom:52px; }
+.article-body { max-width:720px; margin-left:20%; padding-top:52px; font-size:17px; line-height:1.65; }
+.article-body h2 { font-family:var(--news-sans); font-size:30px; font-weight:700; letter-spacing:-.035em; line-height:1.15; }
+.article-body h3 { font-size:17px; }
+.decision-visual { margin-bottom:44px; }
+.visual-step strong { font-family:var(--news-sans); font-size:25px; font-weight:700; letter-spacing:-.03em; line-height:1.05; }
+.visual-arrow { font-family:var(--news-sans); font-size:24px; font-weight:600; }
+@media (width<=720px) { .site-header { height:60px; } .blog-shell,.article-shell { padding-top:40px; } .blog-hero h1,.article-header h1 { font-size:46px; } .blog-hero p,.article-header p { font-size:17px; } .post-card h2 { font-size:24px; } }
 `;
 
 function documentShell(title, description, body) {
