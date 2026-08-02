@@ -15,7 +15,7 @@ The build copies the imported homepage into `dist/`, then generates the `/blog/`
 The workflow in `.github/workflows/deploy.yml` publishes `dist/` to the
 `vladimir-petrishchev` bucket in project `gen-lang-client-0935094515`.
 
-The weekly blog workflow runs every Monday at 08:00 Europe/Berlin. It asks the OpenAI Responses API for a structured 800–1,200 word article, writes it to `content/posts/`, commits it to `main`, and lets the deployment workflow publish the updated site. Before the first scheduled run, add the repository Actions secret `OPENAI_API_KEY`.
+The blog workflow is currently manual-only. Run it from GitHub Actions when you want a new article. It asks the OpenAI Responses API for a structured 800–1,200 word article, writes it to `content/posts/`, commits it to `main`, and lets the deployment workflow publish the updated site. Add the repository Actions secret `OPENAI_API_KEY` before running it.
 
 GitHub must have these deployment secrets configured:
 
