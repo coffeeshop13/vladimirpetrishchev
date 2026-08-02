@@ -95,31 +95,32 @@ footer { background:var(--ink); color:var(--paper); padding:60px max(34px,50vw -
 
 /* Bloomberg-inspired newsroom type: a browser-safe substitute for its proprietary web font. */
 :root { --news-sans:"Avenir Next","Helvetica Neue",Helvetica,Arial,sans-serif; }
-body { font-family:var(--news-sans); font-size:15px; line-height:1.4; }
+body { font-family:var(--news-sans); font-size:16px; line-height:1.45; }
 .site-header { height:68px; }
 .wordmark { font-family:var(--news-sans); font-size:20px; font-weight:700; letter-spacing:-.06em; }
-.header-links { font-size:14px; font-weight:600; }
+.header-links { font-size:15px; font-weight:600; }
 .header-links a:not(.header-contact) { border-bottom:0; padding-bottom:0; }
 .header-links a:hover { color:var(--blue); }
-.eyebrow,.tags,.post-card time,.post-meta,.back-link,.visual-kicker,.visual-step span,.footer-bottom { font-family:var(--news-sans); font-size:12px; font-weight:600; letter-spacing:.02em; }
+.eyebrow,.tags,.post-card time,.post-meta,.back-link,.visual-kicker,.visual-step span,.footer-bottom { font-family:var(--news-sans); font-size:13px; font-weight:600; letter-spacing:.02em; }
 .blog-shell,.article-shell { max-width:1200px; padding-top:52px; }
 .blog-hero { grid-template-columns:20% 1fr; gap:28px; padding-bottom:62px; }
 .blog-hero h1,.article-header h1 { font-family:var(--news-sans); font-size:clamp(44px,5.3vw,76px); font-weight:700; letter-spacing:-.055em; line-height:.98; }
 .blog-hero h1 em { color:var(--ink); font-style:normal; }
-.blog-hero p,.article-header p { font-size:18px; font-weight:400; line-height:1.45; }
+.blog-hero p,.article-header p { font-size:19px; font-weight:400; line-height:1.45; }
 .post-grid { margin-top:62px; }
 .post-card { grid-template-columns:12% 1.15fr 1fr .95fr; gap:18px; min-height:156px; padding:20px 0; }
-.post-card h2 { font-family:var(--news-sans); font-size:26px; font-weight:700; letter-spacing:-.035em; line-height:1.08; }
-.post-card p { font-size:15px; line-height:1.4; }
+.post-card h2 { font-family:var(--news-sans); font-size:28px; font-weight:700; letter-spacing:-.035em; line-height:1.08; }
+.post-card p { font-size:16px; line-height:1.45; }
 .post-card-media img { min-height:116px; transform:scale(1.13); }
 .article-header { grid-template-columns:20% 1fr; gap:28px; padding-bottom:52px; }
-.article-body { max-width:720px; margin-left:20%; padding-top:52px; font-size:17px; line-height:1.65; }
-.article-body h2 { font-family:var(--news-sans); font-size:30px; font-weight:700; letter-spacing:-.035em; line-height:1.15; }
+.article-body { max-width:720px; margin-left:20%; padding-top:52px; font-size:18px; line-height:1.68; }
+.article-body h2 { font-family:var(--news-sans); font-size:32px; font-weight:700; letter-spacing:-.035em; line-height:1.15; }
 .article-body h3 { font-size:17px; }
 .decision-visual { margin-bottom:44px; }
 .visual-step strong { font-family:var(--news-sans); font-size:25px; font-weight:700; letter-spacing:-.03em; line-height:1.05; }
 .visual-arrow { font-family:var(--news-sans); font-size:24px; font-weight:600; }
-@media (width<=720px) { .site-header { height:60px; } .blog-shell,.article-shell { padding-top:40px; } .blog-hero h1,.article-header h1 { font-size:46px; } .blog-hero p,.article-header p { font-size:17px; } .post-card h2 { font-size:24px; } }
+.visual-step p { font-size:15px; }
+@media (width<=720px) { .site-header { height:60px; } .blog-shell,.article-shell { padding-top:40px; } .blog-hero h1,.article-header h1 { font-size:46px; } .blog-hero p,.article-header p { font-size:18px; } .post-card h2 { font-size:26px; } .article-body { font-size:18px; } }
 `;
 
 function documentShell(title, description, body) {
