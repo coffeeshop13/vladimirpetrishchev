@@ -4,6 +4,8 @@ description: "Before choosing a model, ask what decision or workflow should beco
 date: 2026-08-02
 slug: the-first-question-before-adding-ai
 tags: [AI product, strategy, leadership]
+image: /assets/blog-first-question-hero.png
+image_alt: "A cobalt question mark emerging from a network of data points on textured paper"
 status: published
 ---
 
