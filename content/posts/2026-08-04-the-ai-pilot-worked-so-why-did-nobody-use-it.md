@@ -2,10 +2,13 @@
 title: "The AI Pilot Worked. So Why Did Nobody Use It?"
 description: "A good demo proves that AI can produce an answer. Adoption depends on whether the answer fits the work."
 date: 2026-08-04
+updated: 2026-08-05
 slug: the-ai-pilot-worked-so-why-did-nobody-use-it
 tags: [AI product, adoption, operations, leadership]
 image: /assets/blog-ai-pilot-adoption-gap.jpg
 image_alt: "A luminous blue AI prototype separated by a broken bridge from a complex working organisation"
+image_width: 1024
+image_height: 682
 visual: adoption-gap
 status: published
 ---

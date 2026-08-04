@@ -6,6 +6,8 @@ slug: the-first-question-before-adding-ai
 tags: [AI product, strategy, leadership]
 image: /assets/blog-first-question-ai-art.jpg
 image_alt: "Abstract cobalt geometry and painterly data pathways merging on textured paper"
+image_width: 1536
+image_height: 1024
 visual: decision-framework
 status: published
 ---
