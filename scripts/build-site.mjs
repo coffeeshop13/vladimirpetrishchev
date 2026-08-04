@@ -50,6 +50,7 @@ function markdownToHtml(markdown) {
   const output = [];
   let paragraph = [];
   let list = [];
+  let table = [];
   let code = null;
   const flushParagraph = () => {
     if (paragraph.length) output.push(`<p>${inlineMarkdown(paragraph.join(" "))}</p>`);
@@ -59,18 +60,33 @@ function markdownToHtml(markdown) {
     if (list.length) output.push(`<ul>${list.map((item) => `<li>${inlineMarkdown(item)}</li>`).join("")}</ul>`);
     list = [];
   };
+  const flushTable = () => {
+    if (!table.length) return;
+    const [head, ...rows] = table;
+    output.push(`<div class="article-table-wrap"><table><thead><tr>${head.map((cell) => `<th>${inlineMarkdown(cell)}</th>`).join("")}</tr></thead><tbody>${rows.map((row) => `<tr>${row.map((cell) => `<td>${inlineMarkdown(cell)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`);
+    table = [];
+  };
   for (const line of lines) {
-    if (line.startsWith("```") && !code) { flushParagraph(); flushList(); code = []; continue; }
+    if (line.startsWith("```") && !code) { flushParagraph(); flushList(); flushTable(); code = []; continue; }
     if (line.startsWith("```") && code) { output.push(`<pre><code>${escapeHtml(code.join("\n"))}</code></pre>`); code = null; continue; }
     if (code) { code.push(line); continue; }
-    if (!line.trim()) { flushParagraph(); flushList(); continue; }
+    if (!line.trim()) { flushParagraph(); flushList(); flushTable(); continue; }
+    const tableLine = line.trim();
+    if (/^\|.*\|$/.test(tableLine)) {
+      flushParagraph(); flushList();
+      const cells = tableLine.slice(1, -1).split("|").map((cell) => cell.trim());
+      if (!cells.every((cell) => /^:?-{3,}:?$/.test(cell))) table.push(cells);
+      continue;
+    }
     const heading = line.match(/^(#{1,3})\s+(.+)$/);
-    if (heading) { flushParagraph(); flushList(); const level = heading[1].length; output.push(`<h${level}>${inlineMarkdown(heading[2])}</h${level}>`); continue; }
+    if (heading) { flushParagraph(); flushList(); flushTable(); const level = heading[1].length; output.push(`<h${level}>${inlineMarkdown(heading[2])}</h${level}>`); continue; }
+    const quote = line.match(/^>\s+(.+)$/);
+    if (quote) { flushParagraph(); flushList(); flushTable(); output.push(`<blockquote><p>${inlineMarkdown(quote[1])}</p></blockquote>`); continue; }
     const bullet = line.match(/^[-*]\s+(.+)$/);
-    if (bullet) { flushParagraph(); list.push(bullet[1]); continue; }
-    flushList(); paragraph.push(line.trim());
+    if (bullet) { flushParagraph(); flushTable(); list.push(bullet[1]); continue; }
+    flushList(); flushTable(); paragraph.push(line.trim());
   }
-  flushParagraph(); flushList();
+  flushParagraph(); flushList(); flushTable();
   if (code) output.push(`<pre><code>${escapeHtml(code.join("\n"))}</code></pre>`);
   return output.join("\n");
 }
@@ -120,7 +136,22 @@ body { font-family:var(--news-sans); font-size:16px; line-height:1.45; }
 .visual-step strong { font-family:var(--news-sans); font-size:25px; font-weight:700; letter-spacing:-.03em; line-height:1.05; }
 .visual-arrow { font-family:var(--news-sans); font-size:24px; font-weight:600; }
 .visual-step p { font-size:15px; }
-@media (width<=720px) { .site-header { height:60px; } .blog-shell,.article-shell { padding-top:40px; } .blog-hero h1,.article-header h1 { font-size:46px; } .blog-hero p,.article-header p { font-size:18px; } .post-card h2 { font-size:26px; } .article-body { font-size:18px; } }
+.article-body blockquote { border-left:4px solid var(--blue); margin:34px 0; padding:4px 0 4px 24px; font-size:22px; font-weight:600; letter-spacing:-.025em; line-height:1.35; }
+.article-body blockquote p { margin:0; }
+.article-table-wrap { border-top:2px solid var(--ink); margin:34px 0 46px; overflow-x:auto; }
+.article-body table { border-collapse:collapse; width:100%; font-size:15px; line-height:1.4; }
+.article-body th { border-bottom:1px solid var(--ink); padding:13px 14px 12px 0; text-align:left; vertical-align:bottom; font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; }
+.article-body td { border-bottom:1px solid var(--line); padding:16px 14px 16px 0; vertical-align:top; }
+.article-body td:first-child { color:var(--blue); font-weight:700; width:28%; }
+.adoption-visual { border-top:2px solid var(--ink); border-bottom:1px solid var(--line); margin:0 0 54px; padding:0 0 22px; }
+.adoption-visual .visual-kicker { padding-bottom:18px; }
+.adoption-track { display:grid; grid-template-columns:1fr 38px 1fr 38px 1fr; align-items:stretch; }
+.adoption-stage { background:#eeece5; min-height:154px; padding:18px; }
+.adoption-stage span { color:var(--blue); font-size:12px; font-weight:700; }
+.adoption-stage strong { display:block; margin:20px 0 8px; font-size:23px; letter-spacing:-.035em; line-height:1.08; }
+.adoption-stage p { color:#555d66; margin:0; font-size:14px; line-height:1.4; }
+.adoption-arrow { align-self:center; color:var(--blue); font-size:24px; font-weight:700; justify-self:center; }
+@media (width<=720px) { .site-header { height:60px; } .blog-shell,.article-shell { padding-top:40px; } .blog-hero h1,.article-header h1 { font-size:46px; } .blog-hero p,.article-header p { font-size:18px; } .post-card h2 { font-size:26px; } .article-body { font-size:18px; } .article-body blockquote { font-size:20px; margin:28px 0; padding-left:18px; } .article-body table { min-width:650px; } .adoption-track { grid-template-columns:1fr; } .adoption-arrow { padding:8px 0; transform:rotate(90deg); } .adoption-stage { min-height:0; } }
 `;
 
 function documentShell(title, description, body) {
@@ -144,7 +175,7 @@ const posts = [];
 for (const filename of postFiles) {
   const source = await readFile(resolve(postsDirectory, filename), "utf8");
   const { metadata, body } = parseFrontmatter(source);
-  if (metadata.status && metadata.status !== "published") continue;
+  if (metadata.status && metadata.status !== "published" && process.env.INCLUDE_DRAFTS !== "true") continue;
   if (!metadata.title || !metadata.slug || !metadata.date) throw new Error(`Post ${filename} needs title, slug, and date.`);
   posts.push({ metadata, html: markdownToHtml(body) });
 }
@@ -166,7 +197,11 @@ for (const { metadata, html } of posts) {
   const postDirectory = resolve(outputDirectory, "blog", metadata.slug);
   await mkdir(postDirectory, { recursive: true });
   const heroImage = metadata.image ? `<img class="article-hero-image" src="${escapeHtml(articleAssetUrl(metadata.image))}" alt="${escapeHtml(metadata.image_alt || metadata.title)}">` : "";
-  const visual = metadata.visual === "decision-framework" ? `<aside class="decision-visual" aria-label="AI product decision framework"><div class="visual-kicker">Before you build</div><div class="visual-steps"><div class="visual-step"><span>01 / WORK</span><strong>What changes?</strong><p>Find the decision or workflow that should become meaningfully better.</p></div><div class="visual-arrow" aria-hidden="true">→</div><div class="visual-step"><span>02 / RISK</span><strong>What can fail?</strong><p>Make uncertainty, unacceptable errors, and human review explicit.</p></div><div class="visual-arrow" aria-hidden="true">→</div><div class="visual-step"><span>03 / OUTCOME</span><strong>How do we know?</strong><p>Choose the measurable result that earns the system a place in the work.</p></div></div></aside>` : "";
+  const visual = metadata.visual === "decision-framework"
+    ? `<aside class="decision-visual" aria-label="AI product decision framework"><div class="visual-kicker">Before you build</div><div class="visual-steps"><div class="visual-step"><span>01 / WORK</span><strong>What changes?</strong><p>Find the decision or workflow that should become meaningfully better.</p></div><div class="visual-arrow" aria-hidden="true">→</div><div class="visual-step"><span>02 / RISK</span><strong>What can fail?</strong><p>Make uncertainty, unacceptable errors, and human review explicit.</p></div><div class="visual-arrow" aria-hidden="true">→</div><div class="visual-step"><span>03 / OUTCOME</span><strong>How do we know?</strong><p>Choose the measurable result that earns the system a place in the work.</p></div></div></aside>`
+    : metadata.visual === "adoption-gap"
+      ? `<aside class="adoption-visual" aria-label="The path from AI demo to adoption"><div class="visual-kicker">What the pilot must cross</div><div class="adoption-track"><div class="adoption-stage"><span>01 / DEMO</span><strong>Can it answer?</strong><p>Prove the model can produce a useful result.</p></div><div class="adoption-arrow" aria-hidden="true">→</div><div class="adoption-stage"><span>02 / WORKFLOW</span><strong>Can people act?</strong><p>Fit review, evidence, exceptions, and ownership into the work.</p></div><div class="adoption-arrow" aria-hidden="true">→</div><div class="adoption-stage"><span>03 / ADOPTION</span><strong>Does behaviour change?</strong><p>Measure voluntary use and the final business outcome.</p></div></div></aside>`
+      : "";
   const body = `<header class="site-header"><a class="wordmark" href="/" aria-label="Vladimir Petrishchev home">VP<span>·</span></a><nav class="header-links" aria-label="Blog navigation"><a href="/blog/index.html">All notes</a><a href="/rss.xml">RSS</a></nav></header><main class="article-shell"><a class="back-link" href="/blog/index.html">← All notes</a><article><header class="article-header"><div class="eyebrow">${(metadata.tags || []).map(escapeHtml).join(" · ")}</div><div><h1>${escapeHtml(metadata.title)}</h1><div class="post-meta"><time datetime="${escapeHtml(metadata.date)}">${escapeHtml(metadata.date)}</time></div><p>${escapeHtml(metadata.description || "")}</p>${heroImage}</div></header><div class="article-body">${visual}${html}</div></article></main>${footer}`;
   await writeFile(resolve(postDirectory, "index.html"), documentShell(`${metadata.title} — Vladimir Petrishchev`, metadata.description || metadata.title, body));
 }
