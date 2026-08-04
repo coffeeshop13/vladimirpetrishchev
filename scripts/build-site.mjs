@@ -5,6 +5,10 @@ const projectRoot = resolve(import.meta.dirname, "..");
 const referenceDirectory = resolve(projectRoot, "reference-deployment");
 const outputDirectory = resolve(projectRoot, "dist");
 const postsDirectory = resolve(projectRoot, "content/posts");
+const siteUrl = "https://vladimirpetrishchev.com";
+const authorName = "Vladimir Petrishchev";
+const authorUrl = `${siteUrl}/`;
+const authorLinkedIn = "https://www.linkedin.com/in/vladimir-petrishchev/";
 
 await rm(outputDirectory, { recursive: true, force: true });
 await mkdir(outputDirectory, { recursive: true });
@@ -118,6 +122,8 @@ body { font-family:var(--news-sans); font-size:16px; line-height:1.45; }
 .header-links a:not(.header-contact) { border-bottom:0; padding-bottom:0; }
 .header-links a:hover { color:var(--blue); }
 .eyebrow,.tags,.post-card time,.post-meta,.back-link,.visual-kicker,.visual-step span,.footer-bottom { font-family:var(--news-sans); font-size:13px; font-weight:600; letter-spacing:.02em; }
+.post-meta { align-items:center; display:flex; gap:8px; }
+.post-meta a:hover { color:var(--blue); }
 .blog-shell,.article-shell { max-width:1200px; padding-top:52px; }
 .blog-hero { grid-template-columns:20% 1fr; gap:28px; padding-bottom:62px; }
 .blog-hero h1,.article-header h1 { font-family:var(--news-sans); font-size:clamp(44px,5.3vw,76px); font-weight:700; letter-spacing:-.055em; line-height:.98; }
@@ -154,8 +160,19 @@ body { font-family:var(--news-sans); font-size:16px; line-height:1.45; }
 @media (width<=720px) { .site-header { height:60px; } .blog-shell,.article-shell { padding-top:40px; } .blog-hero h1,.article-header h1 { font-size:46px; } .blog-hero p,.article-header p { font-size:18px; } .post-card h2 { font-size:26px; } .article-body { font-size:18px; } .article-body blockquote { font-size:20px; margin:28px 0; padding-left:18px; } .article-body table { min-width:650px; } .adoption-track { grid-template-columns:1fr; } .adoption-arrow { padding:8px 0; transform:rotate(90deg); } .adoption-stage { min-height:0; } }
 `;
 
-function documentShell(title, description, body) {
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHtml(title)}</title><meta name="description" content="${escapeHtml(description)}"><link rel="shortcut icon" href="/favicon.svg"><style>${styles}</style></head><body>${body}</body></html>`;
+function documentShell(title, description, body, seo = {}) {
+  const canonicalUrl = seo.canonicalUrl || `${siteUrl}/`;
+  const imageUrl = seo.imageUrl || `${siteUrl}/og.png`;
+  const imageType = seo.imageType || (/\.png(?:$|\?)/i.test(imageUrl) ? "image/png" : "image/jpeg");
+  const pageType = seo.type || "website";
+  const tags = Array.isArray(seo.tags) ? seo.tags : [];
+  const articleMeta = pageType === "article"
+    ? `${seo.published ? `<meta property="article:published_time" content="${escapeHtml(seo.published)}">` : ""}${seo.modified ? `<meta property="article:modified_time" content="${escapeHtml(seo.modified)}">` : ""}${tags.map((tag) => `<meta property="article:tag" content="${escapeHtml(tag)}">`).join("")}`
+    : "";
+  const structuredData = seo.structuredData
+    ? `<script type="application/ld+json">${JSON.stringify(seo.structuredData).replaceAll("<", "\\u003c")}</script>`
+    : "";
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHtml(title)}</title><meta name="description" content="${escapeHtml(description)}"><meta name="author" content="${authorName}"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><link rel="canonical" href="${escapeHtml(canonicalUrl)}"><link rel="author" href="${authorUrl}"><link rel="alternate" type="application/rss+xml" title="Vladimir Petrishchev — Notes" href="${siteUrl}/rss.xml"><meta property="og:locale" content="en_US"><meta property="og:site_name" content="Vladimir Petrishchev"><meta property="og:type" content="${pageType}"><meta property="og:title" content="${escapeHtml(title)}"><meta property="og:description" content="${escapeHtml(description)}"><meta property="og:url" content="${escapeHtml(canonicalUrl)}"><meta property="og:image" content="${escapeHtml(imageUrl)}"><meta property="og:image:type" content="${imageType}">${seo.imageWidth ? `<meta property="og:image:width" content="${escapeHtml(seo.imageWidth)}">` : ""}${seo.imageHeight ? `<meta property="og:image:height" content="${escapeHtml(seo.imageHeight)}">` : ""}<meta property="og:image:alt" content="${escapeHtml(seo.imageAlt || description)}">${articleMeta}<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escapeHtml(title)}"><meta name="twitter:description" content="${escapeHtml(description)}"><meta name="twitter:image" content="${escapeHtml(imageUrl)}"><meta name="twitter:image:alt" content="${escapeHtml(seo.imageAlt || description)}"><link rel="shortcut icon" href="/favicon.svg"><link rel="icon" href="/favicon.svg">${structuredData}<style>${styles}</style></head><body>${body}</body></html>`;
 }
 
 function articleAssetUrl(assetPath) {
@@ -184,14 +201,19 @@ posts.sort((left, right) => String(right.metadata.date).localeCompare(String(lef
 const homepagePath = resolve(outputDirectory, "index.html");
 let homepage = await readFile(homepagePath, "utf8");
 homepage = homepage.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<link rel="modulepreload"[^>]*>/gi, "");
-homepage = homepage.replace("</head>", "<style>.proof span { font-size: 14px; }</style></head>");
-homepage = homepage.replace('<a href="#experience">Experience</a>', '<a href="/blog/index.html">Blog</a><a href="#experience">Experience</a>');
+homepage = homepage.replace('content="/og.png"', `content="${siteUrl}/og.png"`).replace('content="/og.png"', `content="${siteUrl}/og.png"`);
+const personSchema = { "@context":"https://schema.org", "@type":"Person", "@id":`${authorUrl}#person`, name:authorName, url:authorUrl, sameAs:[authorLinkedIn,"https://github.com/coffeeshop13"], jobTitle:"Data Science Director", knowsAbout:["Artificial intelligence","Data science","AI product strategy","MLOps","Data leadership"] };
+const homepageSeo = `<link rel="canonical" href="${authorUrl}"><link rel="alternate" type="application/rss+xml" title="Vladimir Petrishchev — Notes" href="${siteUrl}/rss.xml"><meta name="author" content="${authorName}"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><meta property="og:type" content="profile"><meta property="og:url" content="${authorUrl}"><meta property="og:site_name" content="Vladimir Petrishchev"><script type="application/ld+json">${JSON.stringify(personSchema)}</script><style>.proof span { font-size: 14px; }</style>`;
+homepage = homepage.replace("</head>", `${homepageSeo}</head>`);
+homepage = homepage.replace('<a href="#experience">Experience</a>', '<a href="/blog/">Blog</a><a href="#experience">Experience</a>');
 await writeFile(homepagePath, homepage);
 
 const footer = `<footer><p class="section-label">Open to thoughtful conversations</p><a class="email" href="mailto:vladimir.petrishchev@gmail.com">vladimir.petrishchev<br>@gmail.com <span>↗</span></a><div class="footer-bottom"><span>© 2026 Vladimir Petrishchev</span><div class="footer-links"><a href="https://www.linkedin.com/in/vladimir-petrishchev/" target="_blank" rel="noreferrer">LinkedIn ↗</a><a href="https://github.com/coffeeshop13" target="_blank" rel="noreferrer">GitHub ↗</a></div></div></footer>`;
-const blogIndexBody = `<header class="site-header"><a class="wordmark" href="/" aria-label="Vladimir Petrishchev home">VP<span>·</span></a><nav class="header-links" aria-label="Blog navigation"><a href="/">Home</a><a href="/rss.xml">RSS</a></nav></header><main class="blog-shell"><section class="blog-hero"><div class="eyebrow">Notes on AI, data &amp; leadership</div><div><h1>Useful ideas,<br><em>shipped regularly.</em></h1><p>A working notebook on building AI systems, data products, and teams that hold up in the real world.</p></div></section><section aria-label="Blog posts"><div class="post-grid">${posts.length ? posts.map(({ metadata }) => `<a class="post-card" href="/blog/${encodeURIComponent(metadata.slug)}/index.html"><time datetime="${escapeHtml(metadata.date)}">${escapeHtml(metadata.date)}</time><div><h2>${escapeHtml(metadata.title)}</h2><div class="tags">${(metadata.tags || []).map(escapeHtml).join(" · ")}</div></div><p>${escapeHtml(metadata.description || "")}</p>${metadata.image ? `<div class="post-card-media"><img src="${escapeHtml(blogAssetUrl(metadata.image))}" alt="${escapeHtml(metadata.image_alt || metadata.title)}" loading="lazy" decoding="async"></div>` : ""}</a>`).join("") : '<p class="empty-state">The first note is being prepared. New posts will appear here automatically.</p>'}</div></section></main>${footer}`;
+const blogIndexBody = `<header class="site-header"><a class="wordmark" href="/" aria-label="Vladimir Petrishchev home">VP<span>·</span></a><nav class="header-links" aria-label="Blog navigation"><a href="/">Home</a><a href="/rss.xml">RSS</a></nav></header><main class="blog-shell"><section class="blog-hero"><div class="eyebrow">Notes on AI, data &amp; leadership</div><div><h1>Useful ideas,<br><em>shipped regularly.</em></h1><p>A working notebook on building AI systems, data products, and teams that hold up in the real world.</p></div></section><section aria-label="Blog posts"><div class="post-grid">${posts.length ? posts.map(({ metadata }) => `<a class="post-card" href="/blog/${encodeURIComponent(metadata.slug)}/"><time datetime="${escapeHtml(metadata.date)}">${escapeHtml(metadata.date)}</time><div><h2>${escapeHtml(metadata.title)}</h2><div class="tags">${(metadata.tags || []).map(escapeHtml).join(" · ")}</div></div><p>${escapeHtml(metadata.description || "")}</p>${metadata.image ? `<div class="post-card-media"><img src="${escapeHtml(blogAssetUrl(metadata.image))}" alt="${escapeHtml(metadata.image_alt || metadata.title)}" loading="lazy" decoding="async"></div>` : ""}</a>`).join("") : '<p class="empty-state">The first note is being prepared. New posts will appear here automatically.</p>'}</div></section></main>${footer}`;
 await mkdir(resolve(outputDirectory, "blog"), { recursive: true });
-await writeFile(resolve(outputDirectory, "blog/index.html"), documentShell("Blog — Vladimir Petrishchev", "Notes on AI, data, product, and leadership from Vladimir Petrishchev.", blogIndexBody));
+const blogDescription = "Practical notes on building dependable AI systems, data products, and teams inside real organisations.";
+const blogSchema = { "@context":"https://schema.org", "@type":"Blog", "@id":`${siteUrl}/blog/#blog`, name:"Vladimir Petrishchev — Notes", description:blogDescription, url:`${siteUrl}/blog/`, author:{ "@type":"Person", "@id":`${authorUrl}#person`, name:authorName, url:authorUrl } };
+await writeFile(resolve(outputDirectory, "blog/index.html"), documentShell("AI, Data & Product Leadership Notes — Vladimir Petrishchev", blogDescription, blogIndexBody, { canonicalUrl:`${siteUrl}/blog/`, imageUrl:`${siteUrl}/og.png`, imageAlt:"Vladimir Petrishchev — AI, data and product leadership", structuredData:blogSchema }));
 
 for (const { metadata, html } of posts) {
   const postDirectory = resolve(outputDirectory, "blog", metadata.slug);
@@ -202,14 +224,24 @@ for (const { metadata, html } of posts) {
     : metadata.visual === "adoption-gap"
       ? `<aside class="adoption-visual" aria-label="The path from AI demo to adoption"><div class="visual-kicker">What the pilot must cross</div><div class="adoption-track"><div class="adoption-stage"><span>01 / DEMO</span><strong>Can it answer?</strong><p>Prove the model can produce a useful result.</p></div><div class="adoption-arrow" aria-hidden="true">→</div><div class="adoption-stage"><span>02 / WORKFLOW</span><strong>Can people act?</strong><p>Fit review, evidence, exceptions, and ownership into the work.</p></div><div class="adoption-arrow" aria-hidden="true">→</div><div class="adoption-stage"><span>03 / ADOPTION</span><strong>Does behaviour change?</strong><p>Measure voluntary use and the final business outcome.</p></div></div></aside>`
       : "";
-  const body = `<header class="site-header"><a class="wordmark" href="/" aria-label="Vladimir Petrishchev home">VP<span>·</span></a><nav class="header-links" aria-label="Blog navigation"><a href="/blog/index.html">All notes</a><a href="/rss.xml">RSS</a></nav></header><main class="article-shell"><a class="back-link" href="/blog/index.html">← All notes</a><article><header class="article-header"><div class="eyebrow">${(metadata.tags || []).map(escapeHtml).join(" · ")}</div><div><h1>${escapeHtml(metadata.title)}</h1><div class="post-meta"><time datetime="${escapeHtml(metadata.date)}">${escapeHtml(metadata.date)}</time></div><p>${escapeHtml(metadata.description || "")}</p>${heroImage}</div></header><div class="article-body">${visual}${html}</div></article></main>${footer}`;
-  await writeFile(resolve(postDirectory, "index.html"), documentShell(`${metadata.title} — Vladimir Petrishchev`, metadata.description || metadata.title, body));
+  const canonicalUrl = `${siteUrl}/blog/${encodeURIComponent(metadata.slug)}/`;
+  const imageUrl = metadata.image ? `${siteUrl}/${String(metadata.image).replace(/^\/+/, "")}` : `${siteUrl}/og.png`;
+  const published = `${metadata.date}T08:00:00+02:00`;
+  const modified = `${metadata.updated || metadata.date}T08:00:00+02:00`;
+  const body = `<header class="site-header"><a class="wordmark" href="/" aria-label="Vladimir Petrishchev home">VP<span>·</span></a><nav class="header-links" aria-label="Blog navigation"><a href="/blog/">All notes</a><a href="/rss.xml">RSS</a></nav></header><main class="article-shell"><a class="back-link" href="/blog/">← All notes</a><article><header class="article-header"><div class="eyebrow">${(metadata.tags || []).map(escapeHtml).join(" · ")}</div><div><h1>${escapeHtml(metadata.title)}</h1><div class="post-meta"><span>By <a href="/" rel="author">${authorName}</a></span><span aria-hidden="true">·</span><time datetime="${escapeHtml(metadata.date)}">${escapeHtml(metadata.date)}</time></div><p>${escapeHtml(metadata.description || "")}</p>${heroImage}</div></header><div class="article-body">${visual}${html}</div></article></main>${footer}`;
+  const articleSchema = { "@context":"https://schema.org", "@type":"BlogPosting", "@id":`${canonicalUrl}#article`, mainEntityOfPage:{ "@type":"WebPage", "@id":canonicalUrl }, headline:metadata.title, description:metadata.description || metadata.title, image:[imageUrl], datePublished:published, dateModified:modified, author:{ "@type":"Person", "@id":`${authorUrl}#person`, name:authorName, url:authorUrl, sameAs:[authorLinkedIn] }, isPartOf:{ "@type":"Blog", "@id":`${siteUrl}/blog/#blog` }, keywords:(metadata.tags || []).join(", ") };
+  await writeFile(resolve(postDirectory, "index.html"), documentShell(metadata.title, metadata.description || metadata.title, body, { canonicalUrl, imageUrl, imageAlt:metadata.image_alt || metadata.title, imageWidth:metadata.image_width, imageHeight:metadata.image_height, type:"article", published, modified, tags:metadata.tags || [], structuredData:articleSchema }));
 }
 
-const siteUrl = "https://vladimirpetrishchev.com";
-const rssItems = posts.map(({ metadata }) => `<item><title>${escapeHtml(metadata.title)}</title><link>${siteUrl}/blog/${encodeURIComponent(metadata.slug)}/index.html</link><guid>${siteUrl}/blog/${encodeURIComponent(metadata.slug)}/index.html</guid><pubDate>${new Date(`${metadata.date}T08:00:00Z`).toUTCString()}</pubDate><description>${escapeHtml(metadata.description || "")}</description></item>`).join("");
-await writeFile(resolve(outputDirectory, "rss.xml"), `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Vladimir Petrishchev — Notes</title><link>${siteUrl}/blog/index.html</link><description>Notes on AI, data, product, and leadership.</description>${rssItems}</channel></rss>`);
-const sitemapUrls = [siteUrl + "/", siteUrl + "/blog/index.html", ...posts.map(({ metadata }) => `${siteUrl}/blog/${encodeURIComponent(metadata.slug)}/index.html`)];
-await writeFile(resolve(outputDirectory, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${sitemapUrls.map((url) => `<url><loc>${url}</loc></url>`).join("")}</urlset>`);
+const latestPostDate = posts.reduce((latest, { metadata }) => String(metadata.updated || metadata.date) > latest ? String(metadata.updated || metadata.date) : latest, "2026-08-05");
+const rssItems = posts.map(({ metadata }) => { const url = `${siteUrl}/blog/${encodeURIComponent(metadata.slug)}/`; return `<item><title>${escapeHtml(metadata.title)}</title><link>${url}</link><guid isPermaLink="true">${url}</guid><pubDate>${new Date(`${metadata.date}T08:00:00Z`).toUTCString()}</pubDate><author>vladimir.petrishchev@gmail.com (${authorName})</author><category>${(metadata.tags || []).map(escapeHtml).join("</category><category>")}</category><description>${escapeHtml(metadata.description || "")}</description></item>`; }).join("");
+await writeFile(resolve(outputDirectory, "rss.xml"), `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Vladimir Petrishchev — Notes</title><link>${siteUrl}/blog/</link><atom:link href="${siteUrl}/rss.xml" rel="self" type="application/rss+xml"/><description>${blogDescription}</description><language>en</language><lastBuildDate>${new Date(`${latestPostDate}T08:00:00Z`).toUTCString()}</lastBuildDate>${rssItems}</channel></rss>`);
+const sitemapEntries = [
+  { loc:`${siteUrl}/`, lastmod:"2026-08-05" },
+  { loc:`${siteUrl}/blog/`, lastmod:latestPostDate },
+  ...posts.map(({ metadata }) => ({ loc:`${siteUrl}/blog/${encodeURIComponent(metadata.slug)}/`, lastmod:metadata.updated || metadata.date, image:metadata.image ? `${siteUrl}/${String(metadata.image).replace(/^\/+/, "")}` : null, imageTitle:metadata.title }))
+];
+await writeFile(resolve(outputDirectory, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">${sitemapEntries.map((entry) => `<url><loc>${entry.loc}</loc><lastmod>${entry.lastmod}</lastmod>${entry.image ? `<image:image><image:loc>${entry.image}</image:loc><image:title>${escapeHtml(entry.imageTitle)}</image:title></image:image>` : ""}</url>`).join("")}</urlset>`);
+await writeFile(resolve(outputDirectory, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl}/sitemap.xml\n`);
 
 console.log(`Prepared ${outputDirectory} with ${posts.length} published blog post(s).`);
