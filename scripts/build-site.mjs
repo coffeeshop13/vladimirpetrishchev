@@ -157,7 +157,19 @@ body { font-family:var(--news-sans); font-size:16px; line-height:1.45; }
 .adoption-stage strong { display:block; margin:20px 0 8px; font-size:23px; letter-spacing:-.035em; line-height:1.08; }
 .adoption-stage p { color:#555d66; margin:0; font-size:14px; line-height:1.4; }
 .adoption-arrow { align-self:center; color:var(--blue); font-size:24px; font-weight:700; justify-self:center; }
-@media (width<=720px) { .site-header { height:60px; } .blog-shell,.article-shell { padding-top:40px; } .blog-hero h1,.article-header h1 { font-size:46px; } .blog-hero p,.article-header p { font-size:18px; } .post-card h2 { font-size:26px; } .article-body { font-size:18px; } .article-body blockquote { font-size:20px; margin:28px 0; padding-left:18px; } .article-body table { min-width:650px; } .adoption-track { grid-template-columns:1fr; } .adoption-arrow { padding:8px 0; transform:rotate(90deg); } .adoption-stage { min-height:0; } }
+.semantic-visual { border-top:2px solid var(--ink); border-bottom:1px solid var(--line); margin:0 0 54px; padding:0 0 22px; }
+.semantic-visual .visual-kicker { padding-bottom:18px; }
+.semantic-track { align-items:stretch; display:grid; grid-template-columns:1fr 30px 1fr 30px 1fr 30px 1fr; }
+.semantic-stage { background:#eeece5; min-height:150px; padding:18px 16px; }
+.semantic-stage:nth-of-type(5) { background:#e4e9f5; }
+.semantic-stage:nth-of-type(7) { background:var(--blue); color:#fff; }
+.semantic-stage span { color:var(--blue); font-size:12px; font-weight:700; }
+.semantic-stage:nth-of-type(7) span { color:#dbe5ff; }
+.semantic-stage strong { display:block; font-size:20px; letter-spacing:-.035em; line-height:1.08; margin:20px 0 8px; }
+.semantic-stage p { color:#555d66; font-size:13px; line-height:1.4; margin:0; }
+.semantic-stage:nth-of-type(7) p { color:#eef3ff; }
+.semantic-arrow { align-self:center; color:var(--blue); font-size:22px; font-weight:700; justify-self:center; }
+@media (width<=720px) { .site-header { height:60px; } .blog-shell,.article-shell { padding-top:40px; } .blog-hero h1,.article-header h1 { font-size:46px; } .blog-hero p,.article-header p { font-size:18px; } .post-card h2 { font-size:26px; } .article-body { font-size:18px; } .article-body blockquote { font-size:20px; margin:28px 0; padding-left:18px; } .article-body table { min-width:650px; } .adoption-track,.semantic-track { grid-template-columns:1fr; } .adoption-arrow,.semantic-arrow { padding:8px 0; transform:rotate(90deg); } .adoption-stage,.semantic-stage { min-height:0; } }
 `;
 
 function documentShell(title, description, body, seo = {}) {
@@ -223,7 +235,9 @@ for (const { metadata, html } of posts) {
     ? `<aside class="decision-visual" aria-label="AI product decision framework"><div class="visual-kicker">Before you build</div><div class="visual-steps"><div class="visual-step"><span>01 / WORK</span><strong>What changes?</strong><p>Find the decision or workflow that should become meaningfully better.</p></div><div class="visual-arrow" aria-hidden="true">→</div><div class="visual-step"><span>02 / RISK</span><strong>What can fail?</strong><p>Make uncertainty, unacceptable errors, and human review explicit.</p></div><div class="visual-arrow" aria-hidden="true">→</div><div class="visual-step"><span>03 / OUTCOME</span><strong>How do we know?</strong><p>Choose the measurable result that earns the system a place in the work.</p></div></div></aside>`
     : metadata.visual === "adoption-gap"
       ? `<aside class="adoption-visual" aria-label="The path from AI demo to adoption"><div class="visual-kicker">What the pilot must cross</div><div class="adoption-track"><div class="adoption-stage"><span>01 / DEMO</span><strong>Can it answer?</strong><p>Prove the model can produce a useful result.</p></div><div class="adoption-arrow" aria-hidden="true">→</div><div class="adoption-stage"><span>02 / WORKFLOW</span><strong>Can people act?</strong><p>Fit review, evidence, exceptions, and ownership into the work.</p></div><div class="adoption-arrow" aria-hidden="true">→</div><div class="adoption-stage"><span>03 / ADOPTION</span><strong>Does behaviour change?</strong><p>Measure voluntary use and the final business outcome.</p></div></div></aside>`
-      : "";
+      : metadata.visual === "semantic-stack"
+        ? `<aside class="semantic-visual" aria-label="How enterprise data becomes a safe AI action"><div class="visual-kicker">The missing layer between data and action</div><div class="semantic-track"><div class="semantic-stage"><span>01 / DATA</span><strong>Raw signals</strong><p>Tables, documents, events, and APIs.</p></div><div class="semantic-arrow" aria-hidden="true">→</div><div class="semantic-stage"><span>02 / MEANING</span><strong>Shared definitions</strong><p>Metrics, entities, owners, and rules.</p></div><div class="semantic-arrow" aria-hidden="true">→</div><div class="semantic-stage"><span>03 / CONTEXT</span><strong>Decision boundaries</strong><p>Authority, time, permissions, and risk.</p></div><div class="semantic-arrow" aria-hidden="true">→</div><div class="semantic-stage"><span>04 / ACTION</span><strong>Safe execution</strong><p>A clear answer, tool call, or escalation.</p></div></div></aside>`
+        : "";
   const canonicalUrl = `${siteUrl}/blog/${encodeURIComponent(metadata.slug)}/`;
   const imageUrl = metadata.image ? `${siteUrl}/${String(metadata.image).replace(/^\/+/, "")}` : `${siteUrl}/og.png`;
   const published = `${metadata.date}T08:00:00+02:00`;
