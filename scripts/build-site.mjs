@@ -180,9 +180,21 @@ body { font-family:var(--news-sans); font-size:16px; line-height:1.45; }
 .semantic-stage p { color:#555d66; font-size:13px; line-height:1.4; margin:0; }
 .semantic-stage:nth-of-type(7) p { color:#eef3ff; }
 .semantic-arrow { align-self:center; color:var(--blue); font-size:22px; font-weight:700; justify-self:center; }
+.authority-visual { border-top:2px solid var(--ink); border-bottom:1px solid var(--line); margin:0 0 54px; padding:0 0 22px; }
+.authority-visual .visual-kicker { padding-bottom:18px; }
+.authority-track { align-items:stretch; display:grid; grid-template-columns:1fr 30px 1fr 30px 1fr 30px 1fr; }
+.authority-stage { background:#eeece5; min-height:150px; padding:18px 16px; }
+.authority-stage:nth-of-type(5) { background:#e4e9f5; }
+.authority-stage:nth-of-type(7) { background:var(--blue); color:#fff; }
+.authority-stage span { color:var(--blue); font-size:12px; font-weight:700; }
+.authority-stage:nth-of-type(7) span { color:#dbe5ff; }
+.authority-stage strong { display:block; font-size:20px; letter-spacing:-.035em; line-height:1.08; margin:20px 0 8px; }
+.authority-stage p { color:#555d66; font-size:13px; line-height:1.4; margin:0; }
+.authority-stage:nth-of-type(7) p { color:#eef3ff; }
+.authority-arrow { align-self:center; color:var(--blue); font-size:22px; font-weight:700; justify-self:center; }
 .breadcrumb { align-items:center; color:#5c636c; display:flex; flex-wrap:wrap; font-size:13px; font-weight:600; gap:8px; margin-bottom:46px; } .breadcrumb a:hover { color:var(--blue); } .breadcrumb span { color:#9aa0a8; }
 .related-notes { border-top:2px solid var(--ink); margin-top:72px; padding-top:16px; } .related-notes h2 { font-size:14px; letter-spacing:.04em; margin:0 0 18px; text-transform:uppercase; } .related-note { border-top:1px solid var(--line); display:grid; gap:16px; grid-template-columns:1fr 132px; padding:18px 0; } .related-note h3 { color:var(--ink); font-size:21px; letter-spacing:-.03em; line-height:1.15; margin:0 0 8px; } .related-note p { color:#555d66; font-size:14px; line-height:1.45; margin:0; } .related-note img { aspect-ratio:16 / 10; border:1px solid var(--line); height:100%; object-fit:cover; width:100%; } .related-note:hover h3 { color:var(--blue); }
-@media (width<=720px) { .site-header { height:60px; } .blog-shell,.article-shell { padding-top:40px; } .blog-hero,.article-header { grid-template-columns:minmax(0,1fr); gap:24px; } .blog-hero h1,.article-header h1 { font-size:clamp(40px,12vw,46px); } .blog-hero p,.article-header p { font-size:18px; } .article-header .eyebrow { max-width:100%; } .article-hero-image { margin-top:30px; } .post-card { grid-template-columns:minmax(0,1fr); gap:11px; min-height:0; padding:24px 0; } .post-card h2 { font-size:26px; } .post-card-media img { min-height:0; transform:scale(1.08); } .article-body { font-size:18px; margin-left:0; max-width:none; padding-top:42px; } .article-body blockquote { font-size:20px; margin:28px 0; padding-left:18px; } .article-body table { min-width:650px; } .adoption-track,.semantic-track { grid-template-columns:1fr; } .adoption-arrow,.semantic-arrow { padding:8px 0; transform:rotate(90deg); } .adoption-stage,.semantic-stage { min-height:0; } .breadcrumb { margin-bottom:34px; } .related-notes { margin-top:54px; } .related-note { grid-template-columns:1fr; } .related-note img { height:auto; } }
+@media (width<=720px) { .site-header { height:60px; } .blog-shell,.article-shell { padding-top:40px; } .blog-hero,.article-header { grid-template-columns:minmax(0,1fr); gap:24px; } .blog-hero h1,.article-header h1 { font-size:clamp(40px,12vw,46px); } .blog-hero p,.article-header p { font-size:18px; } .article-header .eyebrow { max-width:100%; } .article-hero-image { margin-top:30px; } .post-card { grid-template-columns:minmax(0,1fr); gap:11px; min-height:0; padding:24px 0; } .post-card h2 { font-size:26px; } .post-card-media img { min-height:0; transform:scale(1.08); } .article-body { font-size:18px; margin-left:0; max-width:none; padding-top:42px; } .article-body blockquote { font-size:20px; margin:28px 0; padding-left:18px; } .article-body table { min-width:650px; } .adoption-track,.semantic-track,.authority-track { grid-template-columns:1fr; } .adoption-arrow,.semantic-arrow,.authority-arrow { padding:8px 0; transform:rotate(90deg); } .adoption-stage,.semantic-stage,.authority-stage { min-height:0; } .breadcrumb { margin-bottom:34px; } .related-notes { margin-top:54px; } .related-note { grid-template-columns:1fr; } .related-note img { height:auto; } }
 `;
 
 function documentShell(title, description, body, seo = {}) {
@@ -222,6 +234,7 @@ for (const filename of postFiles) {
   posts.push({ metadata, html: markdownToHtml(body), body, wordCount:countWords(body) });
 }
 posts.sort((left, right) => String(right.metadata.date).localeCompare(String(left.metadata.date)));
+const latestPostDate = posts.reduce((latest, { metadata }) => String(metadata.updated || metadata.date) > latest ? String(metadata.updated || metadata.date) : latest, "2026-08-05");
 
 const homepagePath = resolve(outputDirectory, "index.html");
 let homepage = await readFile(homepagePath, "utf8");
@@ -256,7 +269,9 @@ for (const { metadata, html } of posts) {
       ? `<aside class="adoption-visual" aria-label="The path from AI demo to adoption"><div class="visual-kicker">What the pilot must cross</div><div class="adoption-track"><div class="adoption-stage"><span>01 / DEMO</span><strong>Can it answer?</strong><p>Prove the model can produce a useful result.</p></div><div class="adoption-arrow" aria-hidden="true">→</div><div class="adoption-stage"><span>02 / WORKFLOW</span><strong>Can people act?</strong><p>Fit review, evidence, exceptions, and ownership into the work.</p></div><div class="adoption-arrow" aria-hidden="true">→</div><div class="adoption-stage"><span>03 / ADOPTION</span><strong>Does behaviour change?</strong><p>Measure voluntary use and the final business outcome.</p></div></div></aside>`
       : metadata.visual === "semantic-stack"
         ? `<aside class="semantic-visual" aria-label="How enterprise data becomes a safe AI action"><div class="visual-kicker">The missing layer between data and action</div><div class="semantic-track"><div class="semantic-stage"><span>01 / DATA</span><strong>Raw signals</strong><p>Tables, documents, events, and APIs.</p></div><div class="semantic-arrow" aria-hidden="true">→</div><div class="semantic-stage"><span>02 / MEANING</span><strong>Shared definitions</strong><p>Metrics, entities, owners, and rules.</p></div><div class="semantic-arrow" aria-hidden="true">→</div><div class="semantic-stage"><span>03 / CONTEXT</span><strong>Decision boundaries</strong><p>Authority, time, permissions, and risk.</p></div><div class="semantic-arrow" aria-hidden="true">→</div><div class="semantic-stage"><span>04 / ACTION</span><strong>Safe execution</strong><p>A clear answer, tool call, or escalation.</p></div></div></aside>`
-        : "";
+        : metadata.visual === "authority-envelope"
+          ? `<aside class="authority-visual" aria-label="The authority envelope for a production AI agent"><div class="visual-kicker">A safe path from mission to action</div><div class="authority-track"><div class="authority-stage"><span>01 / MISSION</span><strong>One clear job</strong><p>Define the outcome the agent is responsible for.</p></div><div class="authority-arrow" aria-hidden="true">→</div><div class="authority-stage"><span>02 / IDENTITY</span><strong>Known principal</strong><p>Record who the agent is and whom it represents.</p></div><div class="authority-arrow" aria-hidden="true">→</div><div class="authority-stage"><span>03 / LIMITS</span><strong>Bounded authority</strong><p>Scope tools, data, amounts, time, and risk.</p></div><div class="authority-arrow" aria-hidden="true">→</div><div class="authority-stage"><span>04 / ACTION</span><strong>Act or escalate</strong><p>Execute inside the envelope; ask outside it.</p></div></div></aside>`
+          : "";
   const canonicalUrl = `${siteUrl}/blog/${encodeURIComponent(metadata.slug)}/`;
   const imageUrl = metadata.image ? `${siteUrl}/${String(metadata.image).replace(/^\/+/, "")}` : `${siteUrl}/og.png`;
   const published = `${metadata.date}T08:00:00+02:00`;
@@ -268,11 +283,10 @@ for (const { metadata, html } of posts) {
   await writeFile(resolve(postDirectory, "index.html"), documentShell(metadata.title, metadata.description || metadata.title, body, { canonicalUrl, imageUrl, imageAlt:metadata.image_alt || metadata.title, imageWidth:metadata.image_width, imageHeight:metadata.image_height, preloadImage:articleAssetUrl(metadata.image), type:"article", published, modified, tags:metadata.tags || [], structuredData:articleSchema }));
 }
 
-const latestPostDate = posts.reduce((latest, { metadata }) => String(metadata.updated || metadata.date) > latest ? String(metadata.updated || metadata.date) : latest, "2026-08-05");
 const rssItems = posts.map(({ metadata }) => { const url = `${siteUrl}/blog/${encodeURIComponent(metadata.slug)}/`; return `<item><title>${escapeHtml(metadata.title)}</title><link>${url}</link><guid isPermaLink="true">${url}</guid><pubDate>${new Date(`${metadata.date}T08:00:00+02:00`).toUTCString()}</pubDate><author>vladimir.petrishchev@gmail.com (${authorName})</author><category>${(metadata.tags || []).map(escapeHtml).join("</category><category>")}</category><description>${escapeHtml(metadata.description || "")}</description></item>`; }).join("");
 await writeFile(resolve(outputDirectory, "rss.xml"), `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Vladimir Petrishchev — Notes</title><link>${siteUrl}/blog/</link><atom:link href="${siteUrl}/rss.xml" rel="self" type="application/rss+xml"/><description>${blogDescription}</description><language>en</language><lastBuildDate>${new Date(`${latestPostDate}T08:00:00Z`).toUTCString()}</lastBuildDate>${rssItems}</channel></rss>`);
 const sitemapEntries = [
-  { loc:`${siteUrl}/`, lastmod:"2026-08-08" },
+  { loc:`${siteUrl}/`, lastmod:latestPostDate },
   { loc:`${siteUrl}/blog/`, lastmod:latestPostDate },
   ...posts.map(({ metadata }) => ({ loc:`${siteUrl}/blog/${encodeURIComponent(metadata.slug)}/`, lastmod:metadata.updated || metadata.date, image:metadata.image ? `${siteUrl}/${String(metadata.image).replace(/^\/+/, "")}` : null, imageTitle:metadata.title }))
 ];
