@@ -10,7 +10,9 @@ npm run build
 
 ## GitHub deployment
 
-The build copies the imported homepage into `dist/`, then generates the `/blog/` index, article pages, `rss.xml`, and `sitemap.xml` from Markdown files in `content/posts/`.
+The build copies the imported homepage into `dist/`, then generates the `/blog/` index, article pages, `rss.xml`, `robots.txt`, `llms.txt`, and `sitemap.xml` from Markdown files in `content/posts/`. It also emits page-level `WebPage`, `ProfilePage`, `Blog`, `BlogPosting`, `Person`, and breadcrumb JSON-LD where appropriate.
+
+Before deployment, run `npm run build` and verify that the local article count matches the live sitemap. The deployment uses `--delete-unmatched-destination-objects`, so a stale checkout can remove published pages from the bucket.
 
 The workflow in `.github/workflows/deploy.yml` publishes `dist/` to the
 `vladimir-petrishchev` bucket in project `gen-lang-client-0935094515`.
