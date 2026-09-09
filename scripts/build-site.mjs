@@ -6,6 +6,7 @@ const referenceDirectory = resolve(projectRoot, "reference-deployment");
 const outputDirectory = resolve(projectRoot, "dist");
 const postsDirectory = resolve(projectRoot, "content/posts");
 const siteUrl = "https://vladimirpetrishchev.com";
+const analyticsId = "G-9ZB3Z5HHGM";
 const authorName = "Vladimir Petrishchev";
 const authorUrl = `${siteUrl}/`;
 const authorLinkedIn = "https://www.linkedin.com/in/vladimir-petrishchev/";
@@ -20,6 +21,8 @@ const escapeHtml = (value) => String(value)
   .replaceAll(">", "&gt;")
   .replaceAll('"', "&quot;")
   .replaceAll("'", "&#39;");
+
+const analyticsSnippet = `<script async src="https://www.googletagmanager.com/gtag/js?id=${analyticsId}"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${analyticsId}');</script>`;
 
 function parseFrontmatter(source) {
   const match = source.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
@@ -133,7 +136,7 @@ body { font-family:var(--news-sans); font-size:16px; line-height:1.45; }
 .header-links a:not(.header-contact) { border-bottom:0; padding-bottom:0; }
 .header-links a:hover { color:var(--blue); }
 .eyebrow,.tags,.post-card time,.post-meta,.back-link,.visual-kicker,.visual-step span,.footer-bottom { font-family:var(--news-sans); font-size:13px; font-weight:600; letter-spacing:.02em; }
-.post-meta { align-items:center; display:flex; flex-wrap:wrap; gap:8px; }
+.post-meta { align-items:center; display:flex; gap:8px; }
 .post-meta a:hover { color:var(--blue); }
 .blog-shell,.article-shell { max-width:1200px; padding-top:52px; }
 .blog-hero { grid-template-columns:20% 1fr; gap:28px; padding-bottom:62px; }
@@ -192,110 +195,9 @@ body { font-family:var(--news-sans); font-size:16px; line-height:1.45; }
 .authority-stage p { color:#555d66; font-size:13px; line-height:1.4; margin:0; }
 .authority-stage:nth-of-type(7) p { color:#eef3ff; }
 .authority-arrow { align-self:center; color:var(--blue); font-size:22px; font-weight:700; justify-self:center; }
-.evaluation-visual { border-top:2px solid var(--ink); border-bottom:1px solid var(--line); margin:0 0 54px; padding:0 0 22px; }
-.evaluation-visual .visual-kicker { padding-bottom:18px; }
-.evaluation-track { align-items:stretch; display:grid; grid-template-columns:1fr 30px 1fr 30px 1fr 30px 1fr; }
-.evaluation-stage { background:#eeece5; min-height:150px; padding:18px 16px; }
-.evaluation-stage:nth-of-type(3) { background:#e4e9f5; }
-.evaluation-stage:nth-of-type(5) { background:var(--blue); color:#fff; }
-.evaluation-stage:nth-of-type(7) { border:2px solid #d86b20; background:transparent; }
-.evaluation-stage span { color:var(--blue); font-size:12px; font-weight:700; }
-.evaluation-stage:nth-of-type(5) span { color:#dbe5ff; }
-.evaluation-stage:nth-of-type(7) span { color:#b34e0a; }
-.evaluation-stage strong { display:block; font-size:20px; letter-spacing:-.035em; line-height:1.08; margin:20px 0 8px; }
-.evaluation-stage p { color:#555d66; font-size:13px; line-height:1.4; margin:0; }
-.evaluation-stage:nth-of-type(5) p { color:#eef3ff; }
-.evaluation-arrow { align-self:center; color:var(--blue); font-size:22px; font-weight:700; justify-self:center; }
-.handoff-visual { border-top:2px solid var(--ink); border-bottom:1px solid var(--line); margin:0 0 54px; padding:0 0 22px; }
-.handoff-visual .visual-kicker { padding-bottom:18px; }
-.handoff-track { align-items:stretch; display:grid; grid-template-columns:1fr 24px 1fr 24px 1fr 24px 1fr; }
-.handoff-stage { background:#eeece5; min-height:150px; padding:18px 16px; }
-.handoff-stage:nth-of-type(3) { border:2px solid #d86b20; background:transparent; }
-.handoff-stage:nth-of-type(5) { background:#e4e9f5; }
-.handoff-stage:nth-of-type(7) { background:var(--blue); color:#fff; }
-.handoff-stage span { color:var(--blue); font-size:12px; font-weight:700; }
-.handoff-stage:nth-of-type(3) span { color:#b34e0a; }
-.handoff-stage:nth-of-type(7) span { color:#dbe5ff; }
-.handoff-stage strong { display:block; font-size:20px; letter-spacing:-.035em; line-height:1.08; margin:20px 0 8px; }
-.handoff-stage p { color:#555d66; font-size:13px; line-height:1.4; margin:0; }
-.handoff-stage:nth-of-type(7) p { color:#eef3ff; }
-.handoff-arrow { align-self:center; color:var(--blue); font-size:22px; font-weight:700; justify-self:center; }
-.monitoring-visual { border-top:2px solid var(--ink); border-bottom:1px solid var(--line); margin:0 0 54px; padding:0 0 22px; }
-.monitoring-visual .visual-kicker { padding-bottom:18px; }
-.monitoring-track { align-items:stretch; display:grid; grid-template-columns:1fr 20px 1fr 20px 1fr 20px 1fr 20px 1fr; }
-.monitoring-stage { background:#eeece5; min-height:150px; padding:18px 14px; }
-.monitoring-stage:nth-of-type(3) { background:#e4e9f5; }
-.monitoring-stage:nth-of-type(5) { background:var(--blue); color:#fff; }
-.monitoring-stage:nth-of-type(7) { border:2px solid #d86b20; background:transparent; }
-.monitoring-stage:nth-of-type(9) { background:var(--ink); color:#fff; }
-.monitoring-stage span { color:var(--blue); font-size:11px; font-weight:700; }
-.monitoring-stage:nth-of-type(5) span,.monitoring-stage:nth-of-type(9) span { color:#dbe5ff; }
-.monitoring-stage:nth-of-type(7) span { color:#b34e0a; }
-.monitoring-stage strong { display:block; font-size:18px; letter-spacing:-.035em; line-height:1.08; margin:20px 0 8px; }
-.monitoring-stage p { color:#555d66; font-size:12px; line-height:1.4; margin:0; }
-.monitoring-stage:nth-of-type(5) p,.monitoring-stage:nth-of-type(9) p { color:#eef3ff; }
-.monitoring-arrow { align-self:center; color:var(--blue); font-size:20px; font-weight:700; justify-self:center; }
-.registry-visual { border-top:2px solid var(--ink); border-bottom:1px solid var(--line); margin:0 0 54px; padding:0 0 22px; }
-.registry-visual .visual-kicker { padding-bottom:18px; }
-.registry-track { align-items:stretch; display:grid; grid-template-columns:1fr 20px 1fr 20px 1fr 20px 1fr 20px 1fr; }
-.registry-stage { background:#eeece5; min-height:150px; padding:18px 14px; }
-.registry-stage:nth-of-type(3) { background:#e4e9f5; }
-.registry-stage:nth-of-type(5) { background:var(--blue); color:#fff; }
-.registry-stage:nth-of-type(7) { border:2px solid #d86b20; background:transparent; }
-.registry-stage:nth-of-type(9) { background:var(--ink); color:#fff; }
-.registry-stage span { color:var(--blue); font-size:11px; font-weight:700; }
-.registry-stage:nth-of-type(5) span,.registry-stage:nth-of-type(9) span { color:#dbe5ff; }
-.registry-stage:nth-of-type(7) span { color:#b34e0a; }
-.registry-stage strong { display:block; font-size:18px; letter-spacing:-.035em; line-height:1.08; margin:20px 0 8px; }
-.registry-stage p { color:#555d66; font-size:12px; line-height:1.4; margin:0; }
-.registry-stage:nth-of-type(5) p,.registry-stage:nth-of-type(9) p { color:#eef3ff; }
-.registry-arrow { align-self:center; color:var(--blue); font-size:20px; font-weight:700; justify-self:center; }
-.audit-visual { border-top:2px solid var(--ink); border-bottom:1px solid var(--line); margin:0 0 54px; padding:0 0 22px; }
-.audit-visual .visual-kicker { padding-bottom:18px; }
-.audit-track { align-items:stretch; display:grid; grid-template-columns:1fr 20px 1fr 20px 1fr 20px 1fr 20px 1fr; }
-.audit-stage { background:#eeece5; min-height:150px; padding:18px 14px; }
-.audit-stage:nth-of-type(3) { background:#e4e9f5; }
-.audit-stage:nth-of-type(5) { background:var(--blue); color:#fff; }
-.audit-stage:nth-of-type(9) { background:var(--ink); color:#fff; }
-.audit-stage span { color:var(--blue); font:10px DM Mono,monospace; letter-spacing:.04em; }
-.audit-stage:nth-of-type(5) span,.audit-stage:nth-of-type(9) span { color:#9db8ff; }
-.audit-stage strong { display:block; font:600 17px/1.1 DM Sans,sans-serif; letter-spacing:-.025em; margin:12px 0 8px; }
-.audit-stage p { color:#555d66; font-size:12px; line-height:1.4; margin:0; }
-.audit-stage:nth-of-type(5) p,.audit-stage:nth-of-type(9) p { color:#eef3ff; }
-.audit-arrow { align-self:center; color:var(--blue); font-size:20px; font-weight:700; justify-self:center; }
-.review-visual { border-top:2px solid var(--ink); border-bottom:1px solid var(--line); margin:0 0 54px; padding:0 0 22px; }
-.review-visual .visual-kicker { padding-bottom:18px; }
-.review-track { align-items:stretch; display:grid; grid-template-columns:1fr 20px 1fr 20px 1fr 20px 1fr 20px 1fr; }
-.review-stage { background:#eeece5; min-height:150px; padding:18px 14px; }
-.review-stage:nth-of-type(3) { background:#e4e9f5; }
-.review-stage:nth-of-type(5) { border:2px solid #d86b20; background:transparent; }
-.review-stage:nth-of-type(7) { background:var(--blue); color:#fff; }
-.review-stage:nth-of-type(9) { background:var(--ink); color:#fff; }
-.review-stage span { color:var(--blue); font:10px DM Mono,monospace; letter-spacing:.04em; }
-.review-stage:nth-of-type(5) span { color:#b34e0a; }
-.review-stage:nth-of-type(7) span,.review-stage:nth-of-type(9) span { color:#9db8ff; }
-.review-stage strong { display:block; font:600 17px/1.1 DM Sans,sans-serif; letter-spacing:-.025em; margin:12px 0 8px; }
-.review-stage p { color:#555d66; font-size:12px; line-height:1.4; margin:0; }
-.review-stage:nth-of-type(7) p,.review-stage:nth-of-type(9) p { color:#eef3ff; }
-.review-arrow { align-self:center; color:var(--blue); font-size:20px; font-weight:700; justify-self:center; }
-.portability-visual { border-top:2px solid var(--ink); border-bottom:1px solid var(--line); margin:0 0 54px; padding:0 0 22px; }
-.portability-visual .visual-kicker { padding-bottom:18px; }
-.portability-track { align-items:stretch; display:grid; grid-template-columns:1fr 20px 1fr 20px 1fr 20px 1fr 20px 1fr; }
-.portability-stage { background:#eeece5; min-height:150px; padding:18px 14px; }
-.portability-stage:nth-of-type(3) { background:#e4e9f5; }
-.portability-stage:nth-of-type(5) { background:var(--blue); color:#fff; }
-.portability-stage:nth-of-type(7) { border:2px solid #d86b20; background:transparent; }
-.portability-stage:nth-of-type(9) { background:var(--ink); color:#fff; }
-.portability-stage span { color:var(--blue); font:10px DM Mono,monospace; letter-spacing:.04em; }
-.portability-stage:nth-of-type(5) span,.portability-stage:nth-of-type(9) span { color:#9db8ff; }
-.portability-stage:nth-of-type(7) span { color:#b34e0a; }
-.portability-stage strong { display:block; font:600 17px/1.1 DM Sans,sans-serif; letter-spacing:-.025em; margin:12px 0 8px; }
-.portability-stage p { color:#555d66; font-size:12px; line-height:1.4; margin:0; }
-.portability-stage:nth-of-type(5) p,.portability-stage:nth-of-type(9) p { color:#eef3ff; }
-.portability-arrow { align-self:center; color:var(--blue); font-size:20px; font-weight:700; justify-self:center; }
 .breadcrumb { align-items:center; color:#5c636c; display:flex; flex-wrap:wrap; font-size:13px; font-weight:600; gap:8px; margin-bottom:46px; } .breadcrumb a:hover { color:var(--blue); } .breadcrumb span { color:#9aa0a8; }
 .related-notes { border-top:2px solid var(--ink); margin-top:72px; padding-top:16px; } .related-notes h2 { font-size:14px; letter-spacing:.04em; margin:0 0 18px; text-transform:uppercase; } .related-note { border-top:1px solid var(--line); display:grid; gap:16px; grid-template-columns:1fr 132px; padding:18px 0; } .related-note h3 { color:var(--ink); font-size:21px; letter-spacing:-.03em; line-height:1.15; margin:0 0 8px; } .related-note p { color:#555d66; font-size:14px; line-height:1.45; margin:0; } .related-note img { aspect-ratio:16 / 10; border:1px solid var(--line); height:100%; object-fit:cover; width:100%; } .related-note:hover h3 { color:var(--blue); }
-@media (width<=720px) { .site-header { height:60px; } .blog-shell,.article-shell { padding-top:40px; } .blog-hero,.article-header { grid-template-columns:minmax(0,1fr); gap:24px; } .blog-hero h1,.article-header h1 { font-size:clamp(40px,12vw,46px); } .blog-hero p,.article-header p { font-size:18px; } .article-header .eyebrow { max-width:100%; } .post-meta > span[aria-hidden="true"] { display:none; } .article-hero-image { margin-top:30px; } .post-card { grid-template-columns:minmax(0,1fr); gap:11px; min-height:0; padding:24px 0; } .post-card h2 { font-size:26px; } .post-card-media img { min-height:0; transform:scale(1.08); } .article-body { font-size:18px; margin-left:0; max-width:none; padding-top:42px; } .article-body blockquote { font-size:20px; margin:28px 0; padding-left:18px; } .article-body table { min-width:650px; } .adoption-track,.semantic-track,.authority-track,.evaluation-track,.handoff-track,.monitoring-track,.registry-track,.audit-track,.review-track,.portability-track { grid-template-columns:1fr; } .adoption-arrow,.semantic-arrow,.authority-arrow,.evaluation-arrow,.handoff-arrow,.monitoring-arrow,.registry-arrow,.audit-arrow,.review-arrow,.portability-arrow { padding:8px 0; transform:rotate(90deg); } .adoption-stage,.semantic-stage,.authority-stage,.evaluation-stage,.handoff-stage,.monitoring-stage,.registry-stage,.audit-stage,.review-stage,.portability-stage { min-height:0; } .breadcrumb { margin-bottom:34px; } .related-notes { margin-top:54px; } .related-note { grid-template-columns:1fr; } .related-note img { height:auto; } }
+@media (width<=720px) { .site-header { height:60px; } .blog-shell,.article-shell { padding-top:40px; } .blog-hero,.article-header { grid-template-columns:minmax(0,1fr); gap:24px; } .blog-hero h1,.article-header h1 { font-size:clamp(40px,12vw,46px); } .blog-hero p,.article-header p { font-size:18px; } .article-header .eyebrow { max-width:100%; } .article-hero-image { margin-top:30px; } .post-card { grid-template-columns:minmax(0,1fr); gap:11px; min-height:0; padding:24px 0; } .post-card h2 { font-size:26px; } .post-card-media img { min-height:0; transform:scale(1.08); } .article-body { font-size:18px; margin-left:0; max-width:none; padding-top:42px; } .article-body blockquote { font-size:20px; margin:28px 0; padding-left:18px; } .article-body table { min-width:650px; } .adoption-track,.semantic-track,.authority-track { grid-template-columns:1fr; } .adoption-arrow,.semantic-arrow,.authority-arrow { padding:8px 0; transform:rotate(90deg); } .adoption-stage,.semantic-stage,.authority-stage { min-height:0; } .breadcrumb { margin-bottom:34px; } .related-notes { margin-top:54px; } .related-note { grid-template-columns:1fr; } .related-note img { height:auto; } }
 `;
 
 function documentShell(title, description, body, seo = {}) {
@@ -310,7 +212,7 @@ function documentShell(title, description, body, seo = {}) {
   const structuredData = seo.structuredData
     ? `<script type="application/ld+json">${JSON.stringify(seo.structuredData).replaceAll("<", "\\u003c")}</script>`
     : "";
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f7f5ef"><title>${escapeHtml(title)}</title><meta name="description" content="${escapeHtml(description)}"><meta name="author" content="${authorName}"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><link rel="canonical" href="${escapeHtml(canonicalUrl)}"><link rel="alternate" hreflang="en" href="${escapeHtml(canonicalUrl)}"><link rel="alternate" hreflang="x-default" href="${escapeHtml(canonicalUrl)}"><link rel="author" href="${authorUrl}"><link rel="alternate" type="application/rss+xml" title="Vladimir Petrishchev — Notes" href="${siteUrl}/rss.xml"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><meta property="og:locale" content="en_US"><meta property="og:site_name" content="Vladimir Petrishchev"><meta property="og:type" content="${pageType}"><meta property="og:title" content="${escapeHtml(title)}"><meta property="og:description" content="${escapeHtml(description)}"><meta property="og:url" content="${escapeHtml(canonicalUrl)}"><meta property="og:image" content="${escapeHtml(imageUrl)}"><meta property="og:image:secure_url" content="${escapeHtml(imageUrl)}"><meta property="og:image:type" content="${imageType}">${seo.imageWidth ? `<meta property="og:image:width" content="${escapeHtml(seo.imageWidth)}">` : ""}${seo.imageHeight ? `<meta property="og:image:height" content="${escapeHtml(seo.imageHeight)}">` : ""}<meta property="og:image:alt" content="${escapeHtml(seo.imageAlt || description)}">${articleMeta}<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escapeHtml(title)}"><meta name="twitter:description" content="${escapeHtml(description)}"><meta name="twitter:image" content="${escapeHtml(imageUrl)}"><meta name="twitter:image:alt" content="${escapeHtml(seo.imageAlt || description)}"><link rel="shortcut icon" href="/favicon.svg"><link rel="icon" href="/favicon.svg">${seo.preloadImage ? `<link rel="preload" as="image" href="${escapeHtml(seo.preloadImage)}" fetchpriority="high">` : ""}${structuredData}<style>${styles}</style></head><body>${body}</body></html>`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f7f5ef"><title>${escapeHtml(title)}</title><meta name="description" content="${escapeHtml(description)}"><meta name="author" content="${authorName}"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><link rel="canonical" href="${escapeHtml(canonicalUrl)}"><link rel="alternate" hreflang="en" href="${escapeHtml(canonicalUrl)}"><link rel="alternate" hreflang="x-default" href="${escapeHtml(canonicalUrl)}"><link rel="author" href="${authorUrl}"><link rel="alternate" type="application/rss+xml" title="Vladimir Petrishchev — Notes" href="${siteUrl}/rss.xml"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><meta property="og:locale" content="en_US"><meta property="og:site_name" content="Vladimir Petrishchev"><meta property="og:type" content="${pageType}"><meta property="og:title" content="${escapeHtml(title)}"><meta property="og:description" content="${escapeHtml(description)}"><meta property="og:url" content="${escapeHtml(canonicalUrl)}"><meta property="og:image" content="${escapeHtml(imageUrl)}"><meta property="og:image:secure_url" content="${escapeHtml(imageUrl)}"><meta property="og:image:type" content="${imageType}">${seo.imageWidth ? `<meta property="og:image:width" content="${escapeHtml(seo.imageWidth)}">` : ""}${seo.imageHeight ? `<meta property="og:image:height" content="${escapeHtml(seo.imageHeight)}">` : ""}<meta property="og:image:alt" content="${escapeHtml(seo.imageAlt || description)}">${articleMeta}<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escapeHtml(title)}"><meta name="twitter:description" content="${escapeHtml(description)}"><meta name="twitter:image" content="${escapeHtml(imageUrl)}"><meta name="twitter:image:alt" content="${escapeHtml(seo.imageAlt || description)}"><link rel="shortcut icon" href="/favicon.svg"><link rel="icon" href="/favicon.svg">${seo.preloadImage ? `<link rel="preload" as="image" href="${escapeHtml(seo.preloadImage)}" fetchpriority="high">` : ""}${structuredData}${analyticsSnippet}<style>${styles}</style></head><body>${body}</body></html>`;
 }
 
 function articleAssetUrl(assetPath) {
@@ -348,7 +250,7 @@ const personSchema = { "@type":"Person", "@id":`${authorUrl}#person`, name:autho
 const homepageSchema = { "@context":"https://schema.org", "@graph":[personSchema,{ "@type":"WebSite", "@id":`${siteUrl}/#website`, url:authorUrl, name:authorName, alternateName:"VP", inLanguage:"en", publisher:{ "@id":`${authorUrl}#person` } },{ "@type":"ProfilePage", "@id":`${authorUrl}#profile`, url:authorUrl, name:`${authorName} — AI & Data Science Director`, description:"AI and data science leadership focused on dependable products, data platforms, and teams.", mainEntity:{ "@id":`${authorUrl}#person` }, isPartOf:{ "@id":`${siteUrl}/#website` } },{ "@type":"WebPage", "@id":`${authorUrl}#webpage`, url:authorUrl, name:`${authorName} — AI & Data Science Director`, isPartOf:{ "@id":`${siteUrl}/#website` }, about:{ "@id":`${authorUrl}#person` }, mainEntity:{ "@id":`${authorUrl}#person` } }] };
 const homepageLatest = `<section class="section latest-notes" aria-labelledby="latest-notes-title"><div class="section-label">04 / Latest notes</div><div class="latest-notes-list"><h2 id="latest-notes-title">Writing on AI, data &amp; leadership</h2>${posts.slice(0,3).map(({ metadata }) => `<a class="latest-note-link" href="/blog/${encodeURIComponent(metadata.slug)}/"><time datetime="${escapeHtml(metadata.date)}">${escapeHtml(metadata.date)}</time><strong>${escapeHtml(metadata.title)}</strong><span aria-hidden="true">→</span></a>`).join("")}<a class="all-notes-link" href="/blog/">View all notes →</a></div></section>`;
 const homepageSeo = `<link rel="canonical" href="${authorUrl}"><link rel="alternate" hreflang="en" href="${authorUrl}"><link rel="alternate" hreflang="x-default" href="${authorUrl}"><link rel="alternate" type="application/rss+xml" title="Vladimir Petrishchev — Notes" href="${siteUrl}/rss.xml"><meta name="author" content="${authorName}"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><meta name="theme-color" content="#f7f5ef"><meta property="og:type" content="profile"><meta property="og:url" content="${authorUrl}"><meta property="og:site_name" content="Vladimir Petrishchev"><meta property="og:image:secure_url" content="${siteUrl}/og.png"><script type="application/ld+json">${JSON.stringify(homepageSchema).replaceAll("<", "\\u003c")}</script><style>.proof span{font-size:14px}.latest-notes-list{border-top:1px solid #17212f}.latest-notes-list h2{font-size:clamp(30px,4vw,54px);letter-spacing:-.05em;line-height:1.05;margin:24px 0 34px;max-width:680px}.latest-note-link{align-items:center;border-top:1px solid #d9d6ce;display:grid;gap:24px;grid-template-columns:120px 1fr 30px;padding:20px 0;text-decoration:none}.latest-note-link time{color:#6a7077;font-size:13px}.latest-note-link strong{font-size:21px;letter-spacing:-.025em}.latest-note-link span{color:#2259d7;font-size:22px}.latest-note-link:hover strong,.all-notes-link{color:#2259d7}.all-notes-link{display:inline-block;font-weight:600;margin-top:24px}@media(max-width:720px){.latest-note-link{gap:8px;grid-template-columns:1fr 24px}.latest-note-link time{grid-column:1/-1}.latest-note-link strong{font-size:18px}}</style>`;
-homepage = homepage.replace("</head>", `${homepageSeo}</head>`);
+homepage = homepage.replace("</head>", `${homepageSeo}${analyticsSnippet}</head>`);
 homepage = homepage.replace('<a href="#experience">Experience</a>', '<a href="/blog/">Blog</a><a href="#experience">Experience</a>');
 homepage = homepage.replace('<footer id="contact">', `${homepageLatest}<footer id="contact">`);
 await writeFile(homepagePath, homepage);
@@ -372,21 +274,7 @@ for (const { metadata, html } of posts) {
         ? `<aside class="semantic-visual" aria-label="How enterprise data becomes a safe AI action"><div class="visual-kicker">The missing layer between data and action</div><div class="semantic-track"><div class="semantic-stage"><span>01 / DATA</span><strong>Raw signals</strong><p>Tables, documents, events, and APIs.</p></div><div class="semantic-arrow" aria-hidden="true">→</div><div class="semantic-stage"><span>02 / MEANING</span><strong>Shared definitions</strong><p>Metrics, entities, owners, and rules.</p></div><div class="semantic-arrow" aria-hidden="true">→</div><div class="semantic-stage"><span>03 / CONTEXT</span><strong>Decision boundaries</strong><p>Authority, time, permissions, and risk.</p></div><div class="semantic-arrow" aria-hidden="true">→</div><div class="semantic-stage"><span>04 / ACTION</span><strong>Safe execution</strong><p>A clear answer, tool call, or escalation.</p></div></div></aside>`
         : metadata.visual === "authority-envelope"
           ? `<aside class="authority-visual" aria-label="The authority envelope for a production AI agent"><div class="visual-kicker">A safe path from mission to action</div><div class="authority-track"><div class="authority-stage"><span>01 / MISSION</span><strong>One clear job</strong><p>Define the outcome the agent is responsible for.</p></div><div class="authority-arrow" aria-hidden="true">→</div><div class="authority-stage"><span>02 / IDENTITY</span><strong>Known principal</strong><p>Record who the agent is and whom it represents.</p></div><div class="authority-arrow" aria-hidden="true">→</div><div class="authority-stage"><span>03 / LIMITS</span><strong>Bounded authority</strong><p>Scope tools, data, amounts, time, and risk.</p></div><div class="authority-arrow" aria-hidden="true">→</div><div class="authority-stage"><span>04 / ACTION</span><strong>Act or escalate</strong><p>Execute inside the envelope; ask outside it.</p></div></div></aside>`
-          : metadata.visual === "evaluation-safety-case"
-            ? `<aside class="evaluation-visual" aria-label="The safety case for an AI agent evaluation"><div class="visual-kicker">An evaluation is a live operating environment</div><div class="evaluation-track"><div class="evaluation-stage"><span>01 / TASK</span><strong>Solvable target</strong><p>Prove the challenge can finish inside its declared scope.</p></div><div class="evaluation-arrow" aria-hidden="true">→</div><div class="evaluation-stage"><span>02 / BOUNDARY</span><strong>Verified isolation</strong><p>Deny unexpected egress and test the boundary before every run.</p></div><div class="evaluation-arrow" aria-hidden="true">→</div><div class="evaluation-stage"><span>03 / TRIPWIRE</span><strong>Stop in real time</strong><p>Watch tools, network traffic, and scope—not only final answers.</p></div><div class="evaluation-arrow" aria-hidden="true">→</div><div class="evaluation-stage"><span>04 / INCIDENT</span><strong>Contain and learn</strong><p>Preserve evidence, assign an owner, and harden the harness.</p></div></div></aside>`
-            : metadata.visual === "handoff-transaction"
-              ? `<aside class="handoff-visual" aria-label="A reliable transaction for an AI agent handoff"><div class="visual-kicker">Responsibility must move with the task</div><div class="handoff-track"><div class="handoff-stage"><span>01 / REQUEST</span><strong>Bounded work packet</strong><p>Send intent, context, authority, and completion criteria.</p></div><div class="handoff-arrow" aria-hidden="true">→</div><div class="handoff-stage"><span>02 / ACCEPT</span><strong>Named owner</strong><p>Acknowledge scope with a stable task ID and deadline.</p></div><div class="handoff-arrow" aria-hidden="true">→</div><div class="handoff-stage"><span>03 / EXECUTE</span><strong>Observable state</strong><p>Record progress, approvals, retries, and external effects.</p></div><div class="handoff-arrow" aria-hidden="true">→</div><div class="handoff-stage"><span>04 / PROVE</span><strong>Commit or recover</strong><p>Return durable evidence or route a terminal failure.</p></div></div></aside>`
-              : metadata.visual === "monitoring-data-contract"
-                ? `<aside class="monitoring-visual" aria-label="The governed data path for AI safety monitoring"><div class="visual-kicker">Treat monitoring as a governed data product</div><div class="monitoring-track"><div class="monitoring-stage"><span>01 / CAPTURE</span><strong>Minimum signal</strong><p>Collect only the events and fields the detector needs.</p></div><div class="monitoring-arrow" aria-hidden="true">→</div><div class="monitoring-stage"><span>02 / CUSTODY</span><strong>Controlled storage</strong><p>Keep keys, policy, residency, and access explicit.</p></div><div class="monitoring-arrow" aria-hidden="true">→</div><div class="monitoring-stage"><span>03 / DETECT</span><strong>Known window</strong><p>Version the logic and the activity it may inspect.</p></div><div class="monitoring-arrow" aria-hidden="true">→</div><div class="monitoring-stage"><span>04 / DECIDE</span><strong>Named reviewer</strong><p>Route every flag to an accountable response owner.</p></div><div class="monitoring-arrow" aria-hidden="true">→</div><div class="monitoring-stage"><span>05 / DELETE</span><strong>Proven expiry</strong><p>Verify raw, derived, backup, and exception handling.</p></div></div></aside>`
-                : metadata.visual === "registry-lifecycle"
-                  ? `<aside class="registry-visual" aria-label="The governed lifecycle of an AI agent registry record"><div class="visual-kicker">Approval is a renewable operating claim</div><div class="registry-track"><div class="registry-stage"><span>01 / REGISTER</span><strong>Describe exactly</strong><p>Name the owner, capability, endpoint, and immutable version.</p></div><div class="registry-arrow" aria-hidden="true">→</div><div class="registry-stage"><span>02 / EVIDENCE</span><strong>Test the claim</strong><p>Attach current evaluation, security, and operating results.</p></div><div class="registry-arrow" aria-hidden="true">→</div><div class="registry-stage"><span>03 / ADMIT</span><strong>Bound discovery</strong><p>Approve one version for named consumers and conditions.</p></div><div class="registry-arrow" aria-hidden="true">→</div><div class="registry-stage"><span>04 / REVIEW</span><strong>Let trust expire</strong><p>Recheck on a date or whenever material dependencies change.</p></div><div class="registry-arrow" aria-hidden="true">→</div><div class="registry-stage"><span>05 / RETIRE</span><strong>Close cleanly</strong><p>Remove discovery and access while preserving the audit trail.</p></div></div></aside>`
-                  : metadata.visual === "action-audit-trail"
-                    ? `<aside class="audit-visual" aria-label="A verifiable audit trail for an AI agent action"><div class="visual-kicker">Accountability follows the external action</div><div class="audit-track"><div class="audit-stage"><span>01 / REQUEST</span><strong>Known principal</strong><p>Bind the task to the person or service that asked.</p></div><div class="audit-arrow" aria-hidden="true">→</div><div class="audit-stage"><span>02 / PROPOSE</span><strong>Exact operation</strong><p>Record the tool, target, parameters, and intended effect.</p></div><div class="audit-arrow" aria-hidden="true">→</div><div class="audit-stage"><span>03 / DECIDE</span><strong>Policy proof</strong><p>Preserve the rule, attributes, approval, and result.</p></div><div class="audit-arrow" aria-hidden="true">→</div><div class="audit-stage"><span>04 / EXECUTE</span><strong>Durable receipt</strong><p>Capture what the target system actually accepted.</p></div><div class="audit-arrow" aria-hidden="true">→</div><div class="audit-stage"><span>05 / VERIFY</span><strong>Observed outcome</strong><p>Confirm the state change, exception, or recovery.</p></div></div></aside>`
-                    : metadata.visual === "research-review-loop"
-                      ? `<aside class="review-visual" aria-label="The evidence loop from AI-generated work to an accountable decision"><div class="visual-kicker">Turn agent throughput into trusted decisions</div><div class="review-track"><div class="review-stage"><span>01 / FRAME</span><strong>Name the decision</strong><p>Set the owner, baseline, and acceptance rule first.</p></div><div class="review-arrow" aria-hidden="true">→</div><div class="review-stage"><span>02 / GENERATE</span><strong>Version the work</strong><p>Preserve inputs, code, parameters, and task identity.</p></div><div class="review-arrow" aria-hidden="true">→</div><div class="review-stage"><span>03 / CHALLENGE</span><strong>Try to reject it</strong><p>Run negative tests, comparisons, and reproduction.</p></div><div class="review-arrow" aria-hidden="true">→</div><div class="review-stage"><span>04 / REVIEW</span><strong>Judge the evidence</strong><p>Record confidence, objections, and accountable approval.</p></div><div class="review-arrow" aria-hidden="true">→</div><div class="review-stage"><span>05 / DECIDE</span><strong>Close the loop</strong><p>Accept, reject, pause, or define one next test.</p></div></div></aside>`
-                      : metadata.visual === "control-portability"
-                        ? `<aside class="portability-visual" aria-label="A portable control contract across AI agent runtimes"><div class="visual-kicker">One policy must survive every runtime</div><div class="portability-track"><div class="portability-stage"><span>01 / DESCRIBE</span><strong>Common facts</strong><p>Normalize identity, task, tool, target, parameters, and data class.</p></div><div class="portability-arrow" aria-hidden="true">→</div><div class="portability-stage"><span>02 / INTERCEPT</span><strong>Before effect</strong><p>Expose a reliable hook before the external action can occur.</p></div><div class="portability-arrow" aria-hidden="true">→</div><div class="portability-stage"><span>03 / DECIDE</span><strong>Central policy</strong><p>Return a versioned allow, deny, modify, or approval requirement.</p></div><div class="portability-arrow" aria-hidden="true">→</div><div class="portability-stage"><span>04 / ENFORCE</span><strong>Exact outcome</strong><p>Stop, transform, or hold the action without framework drift.</p></div><div class="portability-arrow" aria-hidden="true">→</div><div class="portability-stage"><span>05 / PROVE</span><strong>Joined evidence</strong><p>Link proposal, decision, receipt, and result under one task ID.</p></div></div></aside>`
-                        : "";
+          : "";
   const canonicalUrl = `${siteUrl}/blog/${encodeURIComponent(metadata.slug)}/`;
   const imageUrl = metadata.image ? `${siteUrl}/${String(metadata.image).replace(/^\/+/, "")}` : `${siteUrl}/og.png`;
   const published = `${metadata.date}T08:00:00+02:00`;
